@@ -1,22 +1,30 @@
 <!DOCTYPE html>
 <html>
-  <head>
+
+<head>
     <script src="simpleheat.js"></script>
     <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
-  </head>
-  <body>
+</head>
+
+<body>
     <div id="container">
-      <canvas id="canvas" width="1024" height="1024"></canvas>
+        <canvas id="canvas" width="1024" height="1024"></canvas>
     </div>
-    <script src="de_heatmp.js"> </script>
-    <script type="text/javascript">
-    // Create heatmap, passing map name and array of csgo coordinates
-    var points_array = [[-252, 668, 94]];
-    //var points_array = [[-3163.21, 275.99, 0.03]];
-    var options = {point_weight: 18};
-    var heatmap = new de_heatmp( "canvas", "de_cbble", points_array, options );
-    // Draw heatmap
-    heatmap.draw();
+    <script src="de_heatmp.js">
     </script>
-  </body>
+    <script type="text/javascript">
+        // Create heatmap, passing map name and array of csgo coordinates
+        var points_array = [
+            [-800, 668, 94]
+        ];
+        //var points_array = [[-3163.21, 275.99, 0.03]];
+        var options = {
+            point_weight: 18
+        };
+        var heatmap = new de_heatmp("canvas", "de_cbble", points_array, options);
+        // Draw heatmap
+        heatmap.draw();
+    </script>
+</body>
+
 </html>
