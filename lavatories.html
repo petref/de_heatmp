@@ -1,30 +1,90 @@
 <!DOCTYPE html>
 <html>
-
-<head>
+  <head>
     <script src="simpleheat.js"></script>
     <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
-</head>
+  </head>
 
-<body>
+  <body>
     <div id="container">
-        <canvas id="canvas" width="1024" height="1024"></canvas>
+      <canvas id="canvas" width="1024" height="1024"></canvas>
     </div>
-    <script src="de_heatmp.js">
-    </script>
+    <script src="de_heatmp.js"></script>
     <script type="text/javascript">
-        // Create heatmap, passing map name and array of csgo coordinates
-        var points_array = [
-            [-800, 668, 94]
-        ];
-        //var points_array = [[-3163.21, 275.99, 0.03]];
-        var options = {
-            point_weight: 18
-        };
-        var heatmap = new de_heatmp("canvas", "de_cbble", points_array, options);
-        // Draw heatmap
-        heatmap.draw();
-    </script>
-</body>
 
+      let state;
+
+      let parseOn = false;
+      setInterval(() => {
+        if(parseOn){
+          parse(state)
+        }
+      }, 16);
+      function setData(payload){
+        state= payload;
+        parseOn = true;
+
+        
+      }
+
+      function parse(payload) {
+        let pointArrays = [];
+        let data = JSON.parse(payload.data);
+        // console.log(typeof data);
+        // console.log(data);
+
+        for (let tempObj in data) {
+          let position = data[tempObj].gameData.position.split(",");
+          let forward = data[tempObj].gameData.forward;
+          let teamName = data[tempObj].team;
+          let osbSlot = data[tempObj].observer_slot;
+
+          // console.log(`${data[tempObj].gameData.position}`);
+
+          // create object {{position:forward, team:observer_slot}}
+          position.forEach((element) => {
+            let newElement = parseFloat(element);
+
+            position[position.indexOf(element)] = newElement;
+          });
+
+          // console.log(position);
+          pointArrays.push(position);
+          var options = {
+            point_weight: 45,
+          };
+
+          var heatmap = new de_heatmp(
+            "canvas",
+            "de_overpass",
+            pointArrays,
+            options
+          );
+
+          heatmap.draw(2);
+        }
+      }
+
+      new EventSource(
+        "http://redis-birou.pgl.ro:26999/sse/radar-debug/"
+      ).addEventListener("players", setData);
+      // Create heatmap, passing map name and array of csgo coordinates
+      // var points_array2 = [[-2000, 668, 94]];
+      // var points_array = [
+      //   [-2127.29, 2263.17, 75.97],
+      //   [-1127.29, 1263.17, 75.97],
+      //   [-527.29, 863.17, 75.97],
+      //   [-527.29, 563.17, 15.97],
+      //   [-2237.29, 463.17, 15.97],
+      //   [-227.29, 463.17, 15.97],
+      //   [-127.29, 1263.17, 25.97],
+      //   [-2237.29, 463.17, 15.97],
+      //   [-227.29, 463.17, 15.97],
+      //   [-127.29, 1263.17, 25.97],
+      // ];
+
+      // var heatmap = new de_heatmp("canvas", "de_cbble", points_array2, options);
+      // Draw heatmap
+    </script>
+  </body>
 </html>

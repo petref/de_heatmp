@@ -45,9 +45,9 @@ const csgo_maps = {
 };
 
 translate_coordinates = function(x_game, y_game) {
-  pos_x = csgo_maps.map_details["de_cbble"].pos_x;
-  pos_y = csgo_maps.map_details["de_cbble"].pos_y;
-  scale_factor = csgo_maps.map_details["de_cbble"].scale;
+  pos_x = csgo_maps.map_details["de_overpass"].pos_x;
+  pos_y = csgo_maps.map_details["de_overpass"].pos_y;
+  scale_factor = csgo_maps.map_details["de_overpass"].scale;
 
   x_prime = (x_game - pos_x) / scale_factor;
   y_prime = (pos_y - y_game) / scale_factor;
@@ -88,17 +88,17 @@ function de_heatmp(element_id, map_name, coordinates_array, options = {}) {
   });
 
   // get csgo map data; might need later
-  // let map_data = csgo_maps.map_details[map_name];
+  let map_data = csgo_maps.map_details[map_name];
 
   this.draw = function() {
     this.heat.draw();
     frame = null;
   };
 
-  this.add = function(x, y, intensity) {
-    this.heat.add(x, y, intensity);
-    frame = frame || window.requestAnimationFrame(draw);
-  };
+  // this.add = function(x, y, intensity) {
+  //   this.heat.add(x, y, intensity);
+  //   frame = frame || window.requestAnimationFrame(draw);
+  // };
 
   this.get = function(id) {
     return document.getElementById(id);
@@ -106,6 +106,7 @@ function de_heatmp(element_id, map_name, coordinates_array, options = {}) {
 
   // translate coordinates from csgo x,y,z to postions on heatmap
   let translated_coordinates = [];
+  // console.log(coordinates_array)
   coordinates_array.forEach(function(point, index) {
     updated_coordinates = (this.translate_coordinates(point[0], point[1]));
     translated_coordinates.push([updated_coordinates["x"],
@@ -114,10 +115,11 @@ function de_heatmp(element_id, map_name, coordinates_array, options = {}) {
 
   // create the heatmap
   let frame = null;
-  this.heat = simpleheat(element_id).data(translated_coordinates).max(18),
+  this.heat = simpleheat(element_id).data(translated_coordinates).max(36),
   frame;
 
-  this.heat.radius(9, 5);
+  this.heat.radius(22, 3);
+
 };
 
 
